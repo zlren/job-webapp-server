@@ -1,0 +1,28 @@
+server:
+  port: 9003
+
+logging:
+  level.lab.zlren.project.job.mapper: debug
+  level: info
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:mysql://10.109.246.35:3306/job?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: root
+    password: Lab2016!
+    hikari:
+      connection-timeout: 60000
+      maximum-pool-size: 5
+
+mybatis-plus:
+  configuration:
+    cache-enabled: false
+    map-underscore-to-camel-case: true
+  global-config:
+    db-column-underline: true
+    field-strategy: 2
+    id-type: 2
+    refresh-mapper: false
+  typeAliasesPackage: lab.zlren.project.job.entity

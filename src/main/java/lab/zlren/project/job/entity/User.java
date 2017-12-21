@@ -71,5 +71,5 @@ public class User implements Serializable {
      * 薪水
      */
     @JsonView(User.VoView.class)
-    private Float money;
+    private String money;
 }

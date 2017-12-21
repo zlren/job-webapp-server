@@ -13,7 +13,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CommonResponse {
 
+    @JsonView(User.VoView.class)
     private Integer code;
+
+    @JsonView(User.VoView.class)
     private String msg;
 
     @JsonView(User.VoView.class)

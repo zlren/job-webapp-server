@@ -10,17 +10,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class ResponseService {
 
-    /**
-     * @return
-     */
     public CommonResponse success() {
         return new CommonResponse(0, null, null);
     }
 
-    /**
-     * @param msg
-     * @return
-     */
     public CommonResponse success(String msg) {
         return new CommonResponse(0, msg, null);
     }
@@ -29,19 +22,10 @@ public class ResponseService {
         return success("", data);
     }
 
-    /**
-     * @param msg
-     * @param data
-     * @return
-     */
     public CommonResponse success(String msg, Object data) {
         return new CommonResponse(0, msg, data);
     }
 
-    /**
-     * @param msg
-     * @return
-     */
     public CommonResponse failure(String msg) {
         return new CommonResponse(1, msg, null);
     }

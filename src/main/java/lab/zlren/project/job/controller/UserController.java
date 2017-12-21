@@ -31,7 +31,7 @@ public class UserController {
     private ResponseService responseService;
 
     /**
-     * 用户注册
+     * 注册
      *
      * @return 注册后的用户信息
      */
@@ -40,7 +40,7 @@ public class UserController {
     public CommonResponse register(@RequestBody User user, HttpServletRequest request, HttpServletResponse response) {
 
         // 注册的时候提交的数据包括user、pwd和type
-        List<User> userList = this.userService.selectList(new EntityWrapper<>(new User().setUser(user.getUser())));
+        List<User> userList = userService.selectList(new EntityWrapper<>(new User().setUser(user.getUser())));
 
         if (userList.size() > 0) {
             // 用户名重复
@@ -75,7 +75,7 @@ public class UserController {
     public CommonResponse login(@RequestBody User user, HttpServletRequest request, HttpServletResponse response) {
 
         // 登录的参数只有user和pwd
-        User oneByParams = this.userService.selectOne(new EntityWrapper<>(user));
+        User oneByParams = userService.selectOne(new EntityWrapper<>(user));
 
         if (oneByParams == null) {
             return responseService.failure("用户名或密码错误");
@@ -86,6 +86,45 @@ public class UserController {
 
         return responseService.success(oneByParams);
     }
+
+
+    /**
+     * 更新个人信息
+     *
+     * @param userid userid
+     * @param user   包含的域有avatar、company、desc、money、title
+     * @return 更新后的结果
+     */
+    @PostMapping("update")
+    @JsonView(User.VoView.class)
+    public CommonResponse update(@CookieValue(required = false) String userid, @RequestBody User user) {
+
+        if (userid == null || userid.length() <= 0) {
+            return responseService.failure("校验出错");
+        }
+
+        User userByCookie = userService.selectById(Integer.valueOf(userid));
+
+        if (userByCookie == null) {
+            return responseService.failure("校验出错");
+        }
+
+        userByCookie
+                .setAvatar(user.getAvatar())
+                .setCompany(user.getCompany())
+                .setDesc(user.getDesc())
+                .setMoney(user.getMoney())
+                .setTitle(user.getTitle());
+
+        boolean b = userService.updateById(userByCookie);
+
+        if (b) {
+            return responseService.success(userByCookie);
+        } else {
+            return responseService.failure("后端出错");
+        }
+    }
+
 
     /**
      * 查询当前用户信息
@@ -100,7 +139,7 @@ public class UserController {
         log.info("cookie的值是：{}", userid);
 
         if (userid != null && userid.length() > 0) {
-            User user = this.userService.selectById(Integer.valueOf(userid));
+            User user = userService.selectById(Integer.valueOf(userid));
             log.info("已经登录的用户：{}", user);
             return responseService.success("已登录的用户", user);
         }
@@ -116,7 +155,7 @@ public class UserController {
     @GetMapping("list")
     @JsonView(User.VoView.class)
     public List<User> userList() {
-        return this.userService.selectList(null);
+        return userService.selectList(null);
     }
 
 
@@ -134,15 +173,17 @@ public class UserController {
         Cookie[] cookies = request.getCookies();
         boolean findFlag = false;
 
-        for (Cookie cookie : cookies) {
-            // 更新的操作
-            if (key.equals(cookie.getName())) {
-                findFlag = true;
-                cookie.setValue(String.valueOf(value));
-                cookie.setPath("/");
-                cookie.setMaxAge(30 * 60);
-                response.addCookie(cookie);
-                break;
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                // 更新的操作
+                if (key.equals(cookie.getName())) {
+                    findFlag = true;
+                    cookie.setValue(String.valueOf(value));
+                    cookie.setPath("/");
+                    cookie.setMaxAge(30 * 60);
+                    response.addCookie(cookie);
+                    break;
+                }
             }
         }
 

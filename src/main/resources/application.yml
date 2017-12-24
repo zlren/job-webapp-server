@@ -22,3 +22,4 @@ mybatis-plus:
     id-type: 2
     refresh-mapper: false
   typeAliasesPackage: lab.zlren.project.job.entity
+

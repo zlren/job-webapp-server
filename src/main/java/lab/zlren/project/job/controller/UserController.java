@@ -154,8 +154,9 @@ public class UserController {
      */
     @GetMapping("list")
     @JsonView(User.VoView.class)
-    public List<User> userList() {
-        return userService.selectList(null);
+    public CommonResponse userList(@RequestParam String type) {
+        log.info("查询列表：{}", type);
+        return responseService.success(userService.selectList(new EntityWrapper<>(new User().setType(type))));
     }
 
 

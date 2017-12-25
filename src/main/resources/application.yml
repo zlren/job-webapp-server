@@ -22,4 +22,7 @@ mybatis-plus:
     id-type: 2
     refresh-mapper: false
   typeAliasesPackage: lab.zlren.project.job.entity
-
+token:
+  issuer: webapp-job-server
+  duration: 6000000
+  apiKeySecret: 8427bd8ddd0a47df993e55a67de6e90e
